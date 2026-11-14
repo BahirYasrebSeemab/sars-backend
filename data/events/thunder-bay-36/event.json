@@ -146,7 +146,25 @@
     "subtle_decrease_km2": 135.95,
     "increase_double_bounce_km2": 16.26,
     "increase_volume_km2": 2.23,
-    "increase_rough_water_km2": 30.26
+    "increase_rough_water_km2": 30.26,
+    "ground": {
+      "water": {
+        "before_km2": 104.75,
+        "after_km2": 104.75
+      },
+      "smooth": {
+        "before_km2": 16.52,
+        "after_km2": 11.25
+      },
+      "medium": {
+        "before_km2": 556.81,
+        "after_km2": 359.9
+      },
+      "bright": {
+        "before_km2": 99.73,
+        "after_km2": 301.92
+      }
+    }
   },
   "regions": [
     {
@@ -5639,6 +5657,8 @@
     "change": "change.png",
     "subtle": "subtle.png",
     "before_rgb": "before_rgb.png",
-    "after_rgb": "after_rgb.png"
+    "after_rgb": "after_rgb.png",
+    "before_ground": "before_ground.png",
+    "after_ground": "after_ground.png"
   }
 }
