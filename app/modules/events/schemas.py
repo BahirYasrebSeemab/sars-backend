@@ -41,6 +41,8 @@ class Stats(BaseModel):
     mean_change_db: float
     noise_sigma_db: float = 0.0
     histogram: list[HistogramBin]
+    # Ground on each date (ground.py): {"water": {"before_km2": .., "after_km2": ..}, ...}
+    ground: dict[str, dict[str, float]] | None = None
 
 
 class Region(BaseModel):
@@ -81,6 +83,10 @@ class Event(BaseModel):
     synthetic: bool
     product: str
     threshold_db: float
+    # NxN multilook applied to fit the processing machine's memory (1 = native grid), and the
+    # resulting pixel size in metres. Older events have neither.
+    looks: int = 1
+    pixel_m: float | None = None
     # True when the threshold was set from the scene (max of 3 dB and 3 x noise sigma)
     threshold_auto: bool = False
     cross_pol: bool = False  # HV/VH available: brighter class split by scattering mechanism

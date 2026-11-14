@@ -40,6 +40,15 @@ from pyproj import Transformer
 from scipy import ndimage
 
 from app.core.config import settings
+from app.modules.events.ground import add_ground
+from app.modules.events.resources import (
+    MAX_LOOKS,
+    available_memory,
+    choose_looks,
+    multilook,
+    multilook_grid,
+    read_cache_bytes,
+)
 from app.modules.events.schemas import Granule
 
 # NISAR GCOV HDF5 layout per the product spec — verify on your first real granule
@@ -716,6 +725,7 @@ def write_event(meta: dict, pre, post, grid: Grid, threshold_db: float | None, h
         "layers": layer_files,
     }
     (out / "event.json").write_text(json.dumps(event, indent=2))
+    add_ground(out)  # ground on each date, so the before side of the swipe is coloured too
     return out
 
 
@@ -743,8 +753,10 @@ def open_gcov(src: str) -> h5py.File:
     if not src.startswith("http"):
         return h5py.File(src, "r")
     fobj = _login().open([src])[0]
-    # NISAR HDF5 is cloud-optimised (paged); a large raw-chunk cache keeps the request count down.
-    return h5py.File(fobj, "r", rdcc_nbytes=256 * 2**20, rdcc_nslots=50_021)
+    # NISAR HDF5 is cloud-optimised (paged); a large raw-chunk cache keeps the request count down,
+    # sized to the memory this machine actually has free.
+    cache = read_cache_bytes(available_memory())
+    return h5py.File(fobj, "r", rdcc_nbytes=cache, rdcc_nslots=50_021)
 
 
 def fetch(src: str) -> str:
@@ -973,6 +985,22 @@ def tiles(a: argparse.Namespace) -> None:
     print(f"data/tiles: {size / 2**20:.0f} MB")
 
 
+def ground(a: argparse.Namespace) -> None:
+    """Add the ground-on-each-date layer to processed events (no radar download needed)."""
+    folders = (
+        [settings.events_dir / i for i in a.id]
+        if a.id
+        else sorted(p.parent for p in settings.events_dir.glob("*/event.json"))
+    )
+    for folder in folders:
+        if not (folder / "pre_db.npy").is_file():
+            print(f"{folder.name}: no per-pixel data, skipped")
+            continue
+        stats = add_ground(folder)
+        row = ", ".join(f"{k} {v['before_km2']:g} -> {v['after_km2']:g}" for k, v in stats.items())
+        print(f"{folder.name}: km² {row}")
+
+
 def eonet(a: argparse.Namespace) -> None:
     """NASA EONET: open natural events of the last N days, each with a ready-made --bbox."""
     url = f"https://eonet.gsfc.nasa.gov/api/v3/events?status=open&days={a.days}&limit=200"
@@ -1099,6 +1127,8 @@ def _read_gcov(src: str, name: str, bbox: list[float]) -> tuple[np.ndarray, Grid
 
 
 def run(a: argparse.Namespace) -> None:
+    # Measured before the radar is read, so the inputs are not counted twice.
+    available = available_memory()
     pre_src, post_src = (fetch(a.pre), fetch(a.post)) if a.download else (a.pre, a.post)
     pre, g1, m1, hv1 = read_gcov(pre_src, a.bbox)
     post, g2, m2, hv2 = read_gcov(post_src, a.bbox)
@@ -1110,13 +1140,26 @@ def run(a: argparse.Namespace) -> None:
     ):
         raise SystemExit("Pre/post grids differ — pick two granules from the same track & frame")
     h, w = min(pre.shape[0], post.shape[0]), min(pre.shape[1], post.shape[1])
+    # Full resolution on a capable machine; NxN multilook only when memory is short.
+    looks = choose_looks(h * w, available, a.looks)
+    grid = multilook_grid(g1, looks)
+    if looks > 1:
+        free = f"{available / 2**20:.0f} MB free" if available else "forced"
+        print(
+            f"{h * w / 1e6:.1f} M px: averaging {looks}x{looks} -> {abs(grid.dx):g} m pixels "
+            f"({free}); a computer with more memory keeps {abs(g1.dx):g} m"
+        )
+    pre, post = multilook(pre[:h, :w], looks), multilook(post[:h, :w], looks)
+    hv = None
+    if hv1 is not None and hv2 is not None:
+        hv = (multilook(hv1[:h, :w], looks), multilook(hv2[:h, :w], looks))
     meta = dict(
         id=a.id, title=a.title, hazard=a.hazard, location=a.location,
         description=a.description, synthetic=False,
         pre=m1.model_dump() | maturity(a.pre), post=m2.model_dump() | maturity(a.post),
+        looks=looks, pixel_m=round(abs(grid.dx), 2),
     )  # fmt: skip
-    hv = (hv1[:h, :w], hv2[:h, :w]) if hv1 is not None and hv2 is not None else None
-    print("wrote", write_event(meta, pre[:h, :w], post[:h, :w], g1, a.threshold, hv))
+    print("wrote", write_event(meta, pre, post, grid, a.threshold, hv))
 
 
 # ---------- synthetic demo (for UI work before real granules are processed) ----------
@@ -1176,6 +1219,13 @@ def main() -> None:
         help="|change| in dB; default max(3, 3 x scene noise)",
     )
     r.add_argument("--download", action="store_true", help="fetch whole files, don't stream")
+    r.add_argument(
+        "--looks",
+        type=int,
+        choices=range(1, MAX_LOOKS + 1),
+        default=None,
+        help="NxN multilook; default: 1 (full resolution) unless memory is short",
+    )
     r.set_defaults(fn=run)
     s = sub.add_parser("search", help="list GCOV granules over a bbox, grouped by pass")
     s.add_argument("--bbox", type=float, nargs=4, required=True, metavar=("W", "S", "E", "N"))
@@ -1190,6 +1240,9 @@ def main() -> None:
     t = sub.add_parser("tiles", help="download the NASA GIBS photo tiles of events for offline use")
     t.add_argument("--id", nargs="*", help="event ids (default: every processed event)")
     t.set_defaults(fn=tiles)
+    gr = sub.add_parser("ground", help="add the ground-on-each-date layer to processed events")
+    gr.add_argument("--id", nargs="*", help="event ids (default: every processed event)")
+    gr.set_defaults(fn=ground)
     a = p.parse_args()
     a.fn(a)
 

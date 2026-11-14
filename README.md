@@ -46,6 +46,13 @@ Optional, for the NASA photo basemaps without NASA's servers: `uv run python -m 
    file name), orbit-data quality and frame coverage are recorded per granule and shown in the
    app. All three example events use PROVISIONAL products (P05023); VALIDATED products exist from
    2026-10-21 and NASA plans to reprocess earlier dates in 2027.
+
+   **Memory adapts to the machine.** Before processing, the pipeline reads how much memory it
+   can use (free memory, and any cgroup cap such as `systemd-run -p MemoryMax=...`). Processing
+   peaks at about 255 bytes per pixel with HH+HV, so a capable computer keeps the native 10/20 m
+   grid, and a small one (a WSL VM with ~1.8 GB, say) averages 2x2 or 3x3 blocks of linear power
+   first, the standard SAR multilook; the HDF5 read cache shrinks the same way. The choice is
+   recorded in `event.json` (`looks`, `pixel_m`) and printed. `--looks N` forces it.
 4. Keep the NASA photos (HLS, MODIS) for every event on disk, so they load without NASA's servers
    (GIBS sends them with no-store, so the browser never caches them):
 
@@ -56,6 +63,9 @@ Optional, for the NASA photo basemaps without NASA's servers: `uv run python -m 
    for the three events). The app reads this copy first and asks GIBS only for tiles outside it.
    The Esri and OpenStreetMap basemaps are not downloaded: their terms forbid offline copies, so
    they rely on the browser cache (about a day for both).
+5. Events processed before the ground layer existed get it without fetching radar again:
+
+       uv run python -m app.modules.events.pipeline ground         # all events; or --id <id> ...
 
 ## Method (per pixel, native 10/20 m grid)
 1. 5×5 box mean of gamma0 on each date (speckle), then `d = 10·log10(after / before)`.
@@ -91,6 +101,16 @@ Optional, for the NASA photo basemaps without NASA's servers: `uv run python -m 
 7. For each radar date the nearest NASA HLS (Landsat/Sentinel-2, 30 m) scene within ±8 days is
    recorded; the "HLS 30 m, both dates" basemap then shows before-date imagery left of the
    divider and after-date imagery right of it, like the radar.
+8. **Ground on each date** (`ground.py`): both dates are painted in the same four classes so
+   the before side of the swipe is coloured too, and the app lists each class's km² before ->
+   after: water (below the scene's water line), smooth ground (below -12 dB: bare soil, mud),
+   fields and shrubs (below -6 dB), bright (forest, buildings, rock, slopes facing the satellite).
+   Areas count only ground the radar saw on both dates. Water on one date that is still
+   water-dark (<= -9 dB) on the other stays water on both, unless the change layer flagged a real
+   darker/brighter change there: wind on a lake is not a lake drying out (on Thunder Bay that
+   rule keeps 32 km² of wind-ruffled lakes as water), while a flooded wet field still shows as
+   new water (Meghna). Class boundaries are typical levels, so a pixel sitting on one can switch
+   colour from a small shift; the change layer, with its noise threshold, is the strict test.
 
 Output lands in `data/events/<id>/`; the API serves it (`/api/v1/events`,
 `/api/v1/events/{id}`, `/api/v1/events/{id}/probe?lat&lon`). `tests/test_change.py` holds the
