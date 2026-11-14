@@ -423,3 +423,34 @@ def test_water_line_sits_between_the_water_peak_and_the_land_split():
     }
     name = "NISAR_L2_PR_GCOV_034_047_A_027_4005_DHDH_A_20261027T105124_20261027T105159_"
     assert maturity(name + "P05036_N_F_J_001.h5")["maturity"] == "VALIDATED"
+
+
+def test_probe_refuses_points_just_outside_the_box(tmp_path, monkeypatch):
+    import json
+
+    from app.core.errors import AppError
+    from app.modules.events import service
+
+    monkeypatch.setattr(service.settings, "data_dir", tmp_path)
+    folder = tmp_path / "events" / "box"
+    folder.mkdir(parents=True)
+    grid = np.full((100, 100), -10.0, "float16")
+    for name in ("pre_db", "post_db"):
+        np.save(folder / f"{name}.npy", grid)
+    np.save(folder / "flags.npy", np.zeros((100, 100), "uint8"))
+    event = {
+        "id": "box", "title": "t", "hazard": "flood", "product": "p", "threshold_db": 3.0,
+        "location": "", "description": "", "synthetic": False,
+        "bounds": [[23.1, 90.55], [23.45, 90.9]], "stats": {
+            "aoi_km2": 1, "masked_km2": 0, "decrease_km2": 0, "increase_km2": 0,
+            "changed_pct": 0, "mean_change_db": 0, "noise_sigma_db": 1, "histogram": []},
+        "pre": {"id": "a", "datetime": "2026-07-02T00:00:00", "polarization": "HH"},
+        "post": {"id": "b", "datetime": "2026-08-19T00:00:00", "polarization": "HH"},
+        "layers": {},
+    }  # fmt: skip
+    (folder / "event.json").write_text(json.dumps(event))
+    step = 0.35 / 100
+    assert service.probe("box", 23.45 - 0.5 * step, 90.6).pre_db == -10.0  # inside, first row
+    for lat, lon in ((23.45 + 0.3 * step, 90.6), (23.2, 90.55 - 0.3 * step)):
+        with pytest.raises(AppError):
+            service.probe("box", lat, lon)  # a third of a pixel outside: refused

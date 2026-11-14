@@ -1,4 +1,5 @@
 import json
+import math
 
 import numpy as np
 
@@ -51,8 +52,10 @@ def probe(event_id: str, lat: float, lon: float) -> Probe:
     (south, west), (north, east) = event.bounds
     pre = np.load(folder / "pre_db.npy", mmap_mode="r")
     rows, cols = pre.shape
-    r = int((north - lat) / (north - south) * rows)
-    c = int((lon - west) / (east - west) * cols)
+    # floor, not int(): int() rounds toward zero, so a point just north or west of the box
+    # would read the edge pixel instead of being refused.
+    r = math.floor((north - lat) / (north - south) * rows)
+    c = math.floor((lon - west) / (east - west) * cols)
     if not (0 <= r < rows and 0 <= c < cols):
         raise AppError(404, "Outside the analysed area")
     post = np.load(folder / "post_db.npy", mmap_mode="r")
