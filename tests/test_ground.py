@@ -54,3 +54,17 @@ def test_wind_flagged_pixels_stay_water_when_flags_are_given():
     flags = np.array([[pipeline.ROUGH, 0]], "uint8")
     a, b = ground_pair(np.array([[-20.0, -20.0]]), np.array([[-12.0, -14.0]]), WATER_DB, flags)
     assert a.tolist() == [[WATER, WATER]] and b.tolist() == [[WATER, WATER]]
+
+
+def test_a_small_unflagged_shift_across_a_class_line_does_not_change_the_class():
+    # -6.5 -> -5.5 dB crosses the medium/bright line, but 1 dB is below the change threshold
+    # (flag 0): the ground did not measurably change, so the after date keeps the before class.
+    flags = np.array([[0]], "uint8")
+    a, b = ground_pair(np.array([[-6.5]]), np.array([[-5.5]]), WATER_DB, flags)
+    assert a[0, 0] == MEDIUM and b[0, 0] == MEDIUM
+
+
+def test_a_flagged_change_takes_the_after_dates_own_class():
+    flags = np.array([[pipeline.VOLUME]], "uint8")
+    a, b = ground_pair(np.array([[-9.0]]), np.array([[-4.0]]), WATER_DB, flags)
+    assert a[0, 0] == MEDIUM and b[0, 0] == BRIGHT

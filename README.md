@@ -106,12 +106,12 @@ Optional, for the NASA photo basemaps without NASA's servers: `uv run python -m 
    the before side of the swipe is coloured too, and the app lists each class's km² before ->
    after: water (below the scene's water line), smooth ground (below -12 dB: bare soil, mud),
    fields and shrubs (below -6 dB), bright (forest, buildings, rock, slopes facing the satellite).
-   Areas count only ground the radar saw on both dates. Water on one date that is still
-   water-dark (<= -9 dB) on the other stays water on both, unless the change layer flagged a real
-   darker/brighter change there: wind on a lake is not a lake drying out (on Thunder Bay that
-   rule keeps 32 km² of wind-ruffled lakes as water), while a flooded wet field still shows as
-   new water (Meghna). Class boundaries are typical levels, so a pixel sitting on one can switch
-   colour from a small shift; the change layer, with its noise threshold, is the strict test.
+   Areas count only ground the radar saw on both dates. The after date differs from the before
+   date only where the change layer measured a real change (darker, double bounce, rougher);
+   elsewhere it keeps the before class. Otherwise a shift below the noise threshold that happens
+   to cross a class line reads as a change of ground: on Thunder Bay a +1 dB drift moved 200 km²
+   from "fields" to "bright", and wind turned 32 km² of lakes into "smooth ground". The view
+   therefore agrees with the change layer and its noise threshold.
 
 Output lands in `data/events/<id>/`; the API serves it (`/api/v1/events`,
 `/api/v1/events/{id}`, `/api/v1/events/{id}/probe?lat&lon`). `tests/test_change.py` holds the

@@ -57,14 +57,25 @@ def ground_classes(db: np.ndarray, water_db: float) -> np.ndarray:
 
 
 def ground_pair(pre_db: np.ndarray, post_db: np.ndarray, water_db: float, flags=None):
-    """Ground classes of both dates. Water on one date that is still water-dark on the other is
-    water on both: wind on a lake is not a lake drying out (the change layer's rule too). With
-    the change flags, only unchanged or wind-flagged pixels get that treatment."""
+    """Ground classes of both dates.
+
+    With the change flags (the normal case), the after date differs from the before date ONLY
+    where the change layer measured a real change (darker / double bounce / rougher). Elsewhere
+    it keeps the before class: a shift below the noise threshold that happens to cross a class
+    line is not a change of ground (on Thunder Bay a +1 dB drift otherwise moved 200 km² from
+    "fields" to "bright"), and wind on a lake is not a lake drying out.
+
+    Without flags, each date gets its own class, except that water on one date which is still
+    water-dark on the other stays water on both.
+    """
     pre, post = ground_classes(pre_db, water_db), ground_classes(post_db, water_db)
-    steady = True if flags is None else np.isin(flags, (NO_CHANGE, ROUGH_FLAG))
+    if flags is not None:
+        changed = ~np.isin(flags, (NO_CHANGE, ROUGH_FLAG))
+        keep = ~changed & (pre > 0) & (post > 0)
+        return pre, np.where(keep, pre, post)
     with np.errstate(invalid="ignore"):
-        ruffled_after = steady & (pre == WATER) & (post > 0) & (post_db <= ROUGH_MAX_DB)
-        ruffled_before = steady & (post == WATER) & (pre > 0) & (pre_db <= ROUGH_MAX_DB)
+        ruffled_after = (pre == WATER) & (post > 0) & (post_db <= ROUGH_MAX_DB)
+        ruffled_before = (post == WATER) & (pre > 0) & (pre_db <= ROUGH_MAX_DB)
     return np.where(ruffled_before, WATER, pre), np.where(ruffled_after, WATER, post)
 
 

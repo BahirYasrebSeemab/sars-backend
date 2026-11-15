@@ -151,20 +151,20 @@
     "increase_rough_water_km2": 0.01,
     "ground": {
       "water": {
-        "before_km2": 1.44,
-        "after_km2": 1.46
+        "before_km2": 1.32,
+        "after_km2": 1.34
       },
       "smooth": {
-        "before_km2": 2.83,
-        "after_km2": 2.83
+        "before_km2": 2.95,
+        "after_km2": 2.95
       },
       "medium": {
         "before_km2": 65.94,
-        "after_km2": 67.66
+        "after_km2": 66.01
       },
       "bright": {
         "before_km2": 536.84,
-        "after_km2": 535.1
+        "after_km2": 536.75
       }
     }
   },
