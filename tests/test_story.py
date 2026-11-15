@@ -122,3 +122,15 @@ def test_step_display_settings_pass_through(scene):
         "Big", 1, "change", True, 0.5
     )  # fmt: skip
     assert p.show.radar_opacity == 0 and p.show.basemap == "hls"
+
+
+def test_layer_urls_change_when_the_file_is_rewritten(scene):
+    # A browser keeps an image it has already loaded; a reprocessed event must not show the old one.
+    import os
+
+    folder, _flood, _far, _out = scene
+    before = service.get_event("t").layers["change"]
+    assert before.startswith("/files/events/t/change.png?v=")
+    stat = (folder / "change.png").stat()
+    os.utime(folder / "change.png", (stat.st_atime, stat.st_mtime + 60))
+    assert service.get_event("t").layers["change"] != before

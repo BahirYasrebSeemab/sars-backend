@@ -12,9 +12,19 @@ from app.modules.events.story import load_story
 # Add caching/DB only if events reach the hundreds.
 
 
+def _versioned(folder, event_id: str, file: str) -> str:
+    """URL of a layer file with its modification time as a version, so a browser that already
+    holds the image fetches the new one after the event is reprocessed."""
+    target = folder / file
+    version = int(target.stat().st_mtime) if target.is_file() else 0
+    return f"/files/events/{event_id}/{file}?v={version}"
+
+
 def _load(path, with_story: bool = False) -> Event:
     event = Event.model_validate(json.loads(path.read_text()))
-    event.layers = {name: f"/files/events/{event.id}/{file}" for name, file in event.layers.items()}
+    event.layers = {
+        name: _versioned(path.parent, event.id, file) for name, file in event.layers.items()
+    }
     # The list needs no stories, and one broken story must not take the whole list down.
     if with_story:
         event.story = load_story(path.parent, event)
