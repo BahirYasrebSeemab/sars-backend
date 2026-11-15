@@ -1,0 +1,418 @@
+{
+  "id": "mozambique-floods",
+  "title": "Mozambique floods: the Limpopo spills over Ch\u00f3kw\u00e8",
+  "hazard": "flood",
+  "location": "Ch\u00f3kw\u00e8 and Guij\u00e1 on the Limpopo River, Gaza Province, southern Mozambique. Heavy rain from December 2025 flooded the Limpopo and Incomati basins in January 2026; about 392,000 people were displaced and more than 600,000 affected",
+  "description": "",
+  "synthetic": false,
+  "pre": {
+    "id": "NISAR_L2_PR_GCOV_009_114_A_165_4005_DHDH_A_20260105T034232_20260105T034253_X05010_N_P_J_001",
+    "datetime": "2026-01-05T03:42:32.000000000",
+    "polarization": "HH",
+    "track": 114,
+    "frame": 165,
+    "orbit_direction": "Ascending",
+    "product_version": "1.0.2",
+    "maturity": "BETA",
+    "crid": "X05010",
+    "orbit_quality": "near-real-time",
+    "frame_coverage": "partial"
+  },
+  "post": {
+    "id": "NISAR_L2_PR_GCOV_010_114_A_165_4005_DHDH_A_20260117T034232_20260117T034254_X05010_N_P_J_001",
+    "datetime": "2026-01-17T03:42:32.000000000",
+    "polarization": "HH",
+    "track": 114,
+    "frame": 165,
+    "orbit_direction": "Ascending",
+    "product_version": "1.0.2",
+    "maturity": "BETA",
+    "crid": "X05010",
+    "orbit_quality": "near-real-time",
+    "frame_coverage": "partial"
+  },
+  "looks": 2,
+  "pixel_m": 20.0,
+  "product": "NISAR L2 GCOV (L-band, RTC gamma0)",
+  "threshold_db": 12.7,
+  "threshold_auto": true,
+  "cross_pol": true,
+  "display_db": [
+    -17.3,
+    -3.9
+  ],
+  "bounds": [
+    [
+      -24.700182054468677,
+      33.00000000000001
+    ],
+    [
+      -24.499882215474866,
+      33.220259312691155
+    ]
+  ],
+  "stats": {
+    "aoi_km2": 493.72,
+    "masked_km2": 0.0,
+    "decrease_km2": 1.24,
+    "increase_km2": 0.03,
+    "changed_pct": 0.26,
+    "mean_change_db": -0.32,
+    "noise_sigma_db": 4.24,
+    "histogram": [
+      {
+        "db": -9.5,
+        "pixels": 42468
+      },
+      {
+        "db": -8.5,
+        "pixels": 29279
+      },
+      {
+        "db": -7.5,
+        "pixels": 41981
+      },
+      {
+        "db": -6.5,
+        "pixels": 50206
+      },
+      {
+        "db": -5.5,
+        "pixels": 53806
+      },
+      {
+        "db": -4.5,
+        "pixels": 56091
+      },
+      {
+        "db": -3.5,
+        "pixels": 58662
+      },
+      {
+        "db": -2.5,
+        "pixels": 63852
+      },
+      {
+        "db": -1.5,
+        "pixels": 72673
+      },
+      {
+        "db": -0.5,
+        "pixels": 86439
+      },
+      {
+        "db": 0.5,
+        "pixels": 98314
+      },
+      {
+        "db": 1.5,
+        "pixels": 114406
+      },
+      {
+        "db": 2.5,
+        "pixels": 155668
+      },
+      {
+        "db": 3.5,
+        "pixels": 138934
+      },
+      {
+        "db": 4.5,
+        "pixels": 89420
+      },
+      {
+        "db": 5.5,
+        "pixels": 47483
+      },
+      {
+        "db": 6.5,
+        "pixels": 22934
+      },
+      {
+        "db": 7.5,
+        "pixels": 6878
+      },
+      {
+        "db": 8.5,
+        "pixels": 2404
+      },
+      {
+        "db": 9.5,
+        "pixels": 2414
+      }
+    ],
+    "open_water_km2": 1.24,
+    "water_line_db": -14.3,
+    "subtle_threshold_db": 2.55,
+    "subtle_increase_km2": 97.21,
+    "subtle_decrease_km2": 129.83,
+    "increase_double_bounce_km2": 0.03,
+    "increase_volume_km2": 0.0,
+    "increase_rough_water_km2": 0.0,
+    "ground": {
+      "water": {
+        "before_km2": 64.01,
+        "after_km2": 65.25
+      },
+      "smooth": {
+        "before_km2": 102.65,
+        "after_km2": 102.65
+      },
+      "medium": {
+        "before_km2": 307.88,
+        "after_km2": 307.75
+      },
+      "bright": {
+        "before_km2": 21.75,
+        "after_km2": 20.64
+      }
+    }
+  },
+  "regions": [
+    {
+      "n": 1,
+      "cls": "decrease",
+      "km2": 0.29,
+      "share_pct": 23.1,
+      "extent_km2": 6.0,
+      "density_pct": 4.9,
+      "breakdown": {
+        "decrease": 0.29
+      },
+      "lat": -24.5238,
+      "lon": 33.01155,
+      "box": [
+        [
+          -24.53761,
+          33.0
+        ],
+        [
+          -24.50113,
+          33.03436
+        ]
+      ],
+      "rings": [
+        [
+          [
+            -24.53761,
+            33.03377
+          ],
+          [
+            -24.53761,
+            33.02152
+          ],
+          [
+            -24.53418,
+            33.02133
+          ],
+          [
+            -24.5331,
+            33.01975
+          ],
+          [
+            -24.53201,
+            33.01975
+          ],
+          [
+            -24.53111,
+            33.01876
+          ],
+          [
+            -24.53111,
+            33.00968
+          ],
+          [
+            -24.52967,
+            33.00731
+          ],
+          [
+            -24.52967,
+            33.00494
+          ],
+          [
+            -24.52858,
+            33.00257
+          ],
+          [
+            -24.52894,
+            33.00217
+          ],
+          [
+            -24.52876,
+            33.0
+          ],
+          [
+            -24.50113,
+            33.0002
+          ],
+          [
+            -24.50113,
+            33.00099
+          ],
+          [
+            -24.50149,
+            33.00138
+          ],
+          [
+            -24.50149,
+            33.0073
+          ],
+          [
+            -24.50239,
+            33.0079
+          ],
+          [
+            -24.50365,
+            33.0077
+          ],
+          [
+            -24.50402,
+            33.00651
+          ],
+          [
+            -24.50709,
+            33.00158
+          ],
+          [
+            -24.50853,
+            33.00158
+          ],
+          [
+            -24.50889,
+            33.00118
+          ],
+          [
+            -24.51287,
+            33.00118
+          ],
+          [
+            -24.51341,
+            33.00178
+          ],
+          [
+            -24.51377,
+            33.00257
+          ],
+          [
+            -24.51377,
+            33.0077
+          ],
+          [
+            -24.51449,
+            33.00849
+          ],
+          [
+            -24.51449,
+            33.00928
+          ],
+          [
+            -24.51522,
+            33.01086
+          ],
+          [
+            -24.51521,
+            33.01797
+          ],
+          [
+            -24.5163,
+            33.01955
+          ],
+          [
+            -24.5163,
+            33.02152
+          ],
+          [
+            -24.51684,
+            33.02211
+          ],
+          [
+            -24.5172,
+            33.02172
+          ],
+          [
+            -24.51865,
+            33.02172
+          ],
+          [
+            -24.51919,
+            33.02271
+          ],
+          [
+            -24.52009,
+            33.0233
+          ],
+          [
+            -24.5237,
+            33.0229
+          ],
+          [
+            -24.52569,
+            33.02468
+          ],
+          [
+            -24.52605,
+            33.02547
+          ],
+          [
+            -24.52605,
+            33.031
+          ],
+          [
+            -24.52569,
+            33.03139
+          ],
+          [
+            -24.52569,
+            33.03376
+          ],
+          [
+            -24.52623,
+            33.03436
+          ],
+          [
+            -24.52695,
+            33.03436
+          ],
+          [
+            -24.52731,
+            33.03396
+          ],
+          [
+            -24.53761,
+            33.03377
+          ]
+        ]
+      ]
+    }
+  ],
+  "area_rule": {
+    "window_km": 1.5,
+    "density_x_mean": 1.0,
+    "scene_density_pct": 0.27,
+    "threshold_density_pct": 2.0,
+    "min_km2": 0.25,
+    "total_km2": 1.26,
+    "coverage_pct": 23.1
+  },
+  "suspects": [],
+  "hls": [
+    {
+      "date": "2026-01-04",
+      "layer": "HLS_S30_Nadir_BRDF_Adjusted_Reflectance"
+    },
+    {
+      "date": "2026-01-19",
+      "layer": "HLS_S30_Nadir_BRDF_Adjusted_Reflectance"
+    }
+  ],
+  "layers": {
+    "before": "before.png",
+    "after": "after.png",
+    "change": "change.png",
+    "subtle": "subtle.png",
+    "before_rgb": "before_rgb.png",
+    "after_rgb": "after_rgb.png",
+    "before_ground": "before_ground.png",
+    "after_ground": "after_ground.png"
+  }
+}
