@@ -20,7 +20,7 @@
     },
     {
       "id": "photos",
-      "title": "What an ordinary satellite camera saw",
+      "title": "Why not just use satellite photos?",
       "headline": "The camera got clouds. The radar got the burn.",
       "lat": 50.325,
       "lon": -89.52,
@@ -32,7 +32,7 @@
         "radar_opacity": 0,
         "split": 0.5
       },
-      "what_happened": "These are ordinary satellite photos, not radar. Left of the round handle: 11 July 2026, one day before the fire started. Right of it: 28 August, the same day as the radar image. Drag the handle across. Where cloud covers the ground the camera shows nothing; the radar image from that day has no gaps.",
+      "what_happened": "These are ordinary satellite photos, not radar. Left of the round handle: 11 July 2026, one day before the fire started. Right of it: 28 August, the same day as the radar image. Drag the handle across. Where cloud or smoke covers the ground the camera shows nothing. That is why this map uses radar and not only photos: a camera needs daylight and a clear sky, while radar sends its own signal, which passes through cloud, smoke and darkness and comes back the same in any weather.",
       "sources": [
         {
           "label": "The Weather Network: forest fires in northwestern Ontario",

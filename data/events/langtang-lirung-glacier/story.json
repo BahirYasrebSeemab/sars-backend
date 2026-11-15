@@ -1,0 +1,115 @@
+{
+  "summary": "On 26 August 2026 a mass of ice and rock broke off the north side of Langtang Lirung, a 7,227 m peak in Nepal. It fell into the valley of the Lende Khola, blocked the river, and set off the debris flow that ran 100 km downstream. The radar looked at the mountain one week before and five days after.",
+  "points": [
+    {
+      "id": "collapse",
+      "title": "Where the mountain broke",
+      "headline": "2.3 km² changed where the ice and rock came down",
+      "lat": 28.302,
+      "lon": 85.506,
+      "zoom": 12,
+      "show": {
+        "view": "change",
+        "subtle": false,
+        "basemap": "gray",
+        "radar_opacity": 0.9,
+        "split": 0
+      },
+      "what_happened": "This outline holds the strongest change on the mountain. Blue is surface that turned smoother or wetter; magenta is surface that became blocky, such as broken ice and rock debris. Together they fit a slope that failed and a valley floor newly covered in rubble. Scientists first thought a glacial lake had burst; the satellite evidence pointed to a collapse of ice and rock instead.",
+      "sources": [
+        {
+          "label": "ICIMOD: Kyirong-Rasuwa flood 2026",
+          "url": "https://www.icimod.org/kyirong-rasuwa-flood-2026-nepal-china-border/"
+        },
+        {
+          "label": "Unda: glacier collapse, not a glacial lake outburst",
+          "url": "https://www.unda.co.uk/news/glacial-lake-outburst-flood-nepal-2026/"
+        }
+      ],
+      "area": 1
+    },
+    {
+      "id": "why",
+      "title": "Why not just use satellite photos?",
+      "headline": "7,000 m peaks, in the monsoon: cameras see cloud",
+      "lat": 28.275,
+      "lon": 85.525,
+      "zoom": 10,
+      "show": {
+        "view": "change",
+        "subtle": false,
+        "basemap": "hls",
+        "radar_opacity": 0,
+        "split": 0.5
+      },
+      "what_happened": "These are ordinary satellite photos of the two dates. Drag the handle. High Himalayan slopes in August are wrapped in cloud most days, and the collapse happened in the middle of the monsoon. That is why this map uses radar and not only photos: a camera needs daylight and a clear sky, while radar sends its own signal, which passes through cloud, smoke and darkness and comes back the same in any weather.",
+      "sources": []
+    },
+    {
+      "id": "summit",
+      "title": "A second patch, nearer the summit",
+      "headline": "0.8 km² changed high on the mountain",
+      "lat": 28.257,
+      "lon": 85.484,
+      "zoom": 12,
+      "show": {
+        "view": "change",
+        "subtle": false,
+        "basemap": "gray",
+        "radar_opacity": 0.9,
+        "split": 0
+      },
+      "what_happened": "A smaller area of change closer to the peak. On steep ice and rock, fresh avalanche tracks and newly exposed surfaces change how the radar signal comes back.",
+      "sources": [],
+      "area": 2
+    },
+    {
+      "id": "limits",
+      "title": "What the radar cannot tell you",
+      "headline": "97% of this mountain looks the same",
+      "lat": 28.275,
+      "lon": 85.525,
+      "zoom": 10,
+      "show": {
+        "view": "change",
+        "subtle": false,
+        "basemap": "gray",
+        "radar_opacity": 0.9,
+        "split": 0
+      },
+      "what_happened": "Only 2.6% of this 183 km² window changed clearly. The radar shows where the surface changed, not why: fresh snow or melting can also change the signal, and steep faces are partly hidden from the satellite. The cause, an ice and rock collapse, comes from scientists who combined many sources. The radar's part is the where and the how much.",
+      "sources": [
+        {
+          "label": "USGS: 2026 Nepal debris avalanche and flash flood",
+          "url": "https://www.usgs.gov/programs/landslide-hazards/science/2026-nepal-debris-avalanche-and-flash-flood"
+        }
+      ]
+    },
+    {
+      "id": "next",
+      "title": "What happened next",
+      "headline": "The debris ran 100 km downstream",
+      "lat": 28.275,
+      "lon": 85.525,
+      "zoom": 10,
+      "show": {
+        "view": "ground",
+        "subtle": false,
+        "basemap": "gray",
+        "radar_opacity": 0.9,
+        "split": 0.5
+      },
+      "what_happened": "The fallen ice and rock dammed the Lende Khola. When the water broke through, it became a debris flow that hit the Rasuwagadhi border crossing and ran on down the Bhote Koshi and Trishuli. Open the \"Rasuwa-Langtang debris flow\" event to follow it.",
+      "sources": [
+        {
+          "label": "USGS: 2026 Nepal debris avalanche and flash flood",
+          "url": "https://www.usgs.gov/programs/landslide-hazards/science/2026-nepal-debris-avalanche-and-flash-flood"
+        },
+        {
+          "label": "ICIMOD: Kyirong-Rasuwa flood 2026",
+          "url": "https://www.icimod.org/kyirong-rasuwa-flood-2026-nepal-china-border/"
+        }
+      ]
+    }
+  ]
+}
