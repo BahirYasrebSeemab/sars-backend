@@ -87,6 +87,13 @@ class StorySource(BaseModel):
     url: str
 
 
+class StoryVideo(BaseModel):
+    """A video about the event, shown as a link on the step (a YouTube watch URL)."""
+
+    title: str
+    url: str
+
+
 class StoryPath(BaseModel):
     """A line on the map: the river the mud followed, a fault trace."""
 
@@ -126,6 +133,7 @@ class StoryPoint(BaseModel):
     zoom: float = 13
     what_happened: str
     photos: list[StoryPhoto] = []
+    videos: list[StoryVideo] = []
     sources: list[StorySource] = []
     radar: PointRadar | None = None
 

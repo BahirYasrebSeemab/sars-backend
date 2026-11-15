@@ -114,8 +114,10 @@ def test_a_broken_story_does_not_break_the_event_list(scene):
 def test_step_display_settings_pass_through(scene):
     folder, flood, _far, _out = scene
     show = {"view": "change", "subtle": True, "basemap": "hls", "radar_opacity": 0, "split": 0.5}
-    write_story(folder, [point(*flood, headline="Big", area=1, show=show)])
+    video = {"title": "Watch", "url": "https://youtu.be/abc"}
+    write_story(folder, [point(*flood, headline="Big", area=1, show=show, videos=[video])])
     p = service.get_event("t").story.points[0]
+    assert p.videos[0].url == "https://youtu.be/abc"
     assert (p.headline, p.area, p.show.view, p.show.subtle, p.show.split) == (
         "Big", 1, "change", True, 0.5
     )  # fmt: skip
