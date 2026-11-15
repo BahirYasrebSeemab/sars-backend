@@ -11,8 +11,9 @@ areas in their own searchable list (by number, or by darker / growth / double bo
 switch shows or hides the numbered outlines. Opening or closing the sidebar never moves the map.
 
 ## Run
-Clone both repositories side by side. Three processed events (Meghna flood, Thunder Bay and
-Cooley fires) are included in `data/events/`, so no download or login is needed to run the app.
+Clone both repositories side by side. Processed events (the Meghna flood, the Thunder Bay
+fire, Lake Sarez, the Rasuwa debris flow and the Langtang Lirung glacier collapse, among others)
+are included in `data/events/`, so no download or login is needed to run the app.
 
     git clone https://github.com/yusof-shkn/sars-backend.git
     git clone https://github.com/yusof-shkn/sars-frontend.git
