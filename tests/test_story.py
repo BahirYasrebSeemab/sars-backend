@@ -109,3 +109,14 @@ def test_a_broken_story_does_not_break_the_event_list(scene):
     folder, _flood, _far, _out = scene
     (folder / "story.json").write_text("{not json")
     assert [e.id for e in service.list_events()] == ["t"]
+
+
+def test_step_display_settings_pass_through(scene):
+    folder, flood, _far, _out = scene
+    show = {"view": "change", "subtle": True, "basemap": "hls", "radar_opacity": 0, "split": 0.5}
+    write_story(folder, [point(*flood, headline="Big", area=1, show=show)])
+    p = service.get_event("t").story.points[0]
+    assert (p.headline, p.area, p.show.view, p.show.subtle, p.show.split) == (
+        "Big", 1, "change", True, 0.5
+    )  # fmt: skip
+    assert p.show.radar_opacity == 0 and p.show.basemap == "hls"

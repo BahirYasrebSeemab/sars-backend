@@ -105,9 +105,22 @@ class PointRadar(BaseModel):
     changed_pct_300m: float | None = None  # share of the ground within 300 m that changed
 
 
+class StoryShow(BaseModel):
+    """What the map should show for a step of the story; unset fields leave the map as it is."""
+
+    view: str | None = None  # "ground" (before & after) | "change" (only changes)
+    subtle: bool | None = None  # the Landscape 500 m layer
+    basemap: str | None = None  # gray | satellite | streets | hls | modis
+    radar_opacity: float | None = None  # 0 hides the radar so the photos underneath show
+    split: float | None = None  # divider position, 0 (all after) .. 1 (all before)
+
+
 class StoryPoint(BaseModel):
     id: str
     title: str
+    headline: str | None = None  # one big line, e.g. a number: "214 km² of forest changed"
+    area: int | None = None  # a numbered area to fly to and outline instead of the pin
+    show: StoryShow | None = None
     lat: float
     lon: float
     zoom: float = 13
