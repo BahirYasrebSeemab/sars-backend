@@ -6,14 +6,18 @@ import numpy as np
 from app.core.config import settings
 from app.core.errors import AppError
 from app.modules.events.schemas import Event, EventSummary, Probe
+from app.modules.events.story import load_story
 
 # Events are read from disk on every request: a handful of JSON files, no DB needed.
 # Add caching/DB only if events reach the hundreds.
 
 
-def _load(path) -> Event:
+def _load(path, with_story: bool = False) -> Event:
     event = Event.model_validate(json.loads(path.read_text()))
     event.layers = {name: f"/files/events/{event.id}/{file}" for name, file in event.layers.items()}
+    # The list needs no stories, and one broken story must not take the whole list down.
+    if with_story:
+        event.story = load_story(path.parent, event)
     return event
 
 
@@ -40,7 +44,7 @@ def get_event(event_id: str) -> Event:
     path = settings.events_dir / event_id / "event.json"
     if not event_id.replace("-", "").replace("_", "").isalnum() or not path.is_file():
         raise AppError(404, "Event not found")
-    return _load(path)
+    return _load(path, with_story=True)
 
 
 def probe(event_id: str, lat: float, lon: float) -> Probe:

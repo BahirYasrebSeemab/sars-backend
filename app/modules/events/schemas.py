@@ -74,6 +74,55 @@ class EventSummary(BaseModel):
     changed_pct: float
 
 
+class StoryPhoto(BaseModel):
+    file: str  # relative to the event folder in story.json; a /files URL once served
+    caption: str
+    credit: str
+    licence: str
+    source_url: str
+
+
+class StorySource(BaseModel):
+    label: str
+    url: str
+
+
+class StoryPath(BaseModel):
+    """A line on the map: the river the mud followed, a fault trace."""
+
+    label: str
+    points: list[tuple[float, float]]  # [lat, lon]
+
+
+class PointRadar(BaseModel):
+    """What the radar measured at a story point (story.point_radar); never hand-written."""
+
+    covered: bool  # False: outside the box, or no radar sample on both dates
+    pre_db: float | None = None
+    post_db: float | None = None
+    delta_db: float | None = None
+    flag: str | None = None
+    changed_pct_300m: float | None = None  # share of the ground within 300 m that changed
+
+
+class StoryPoint(BaseModel):
+    id: str
+    title: str
+    lat: float
+    lon: float
+    zoom: float = 13
+    what_happened: str
+    photos: list[StoryPhoto] = []
+    sources: list[StorySource] = []
+    radar: PointRadar | None = None
+
+
+class Story(BaseModel):
+    summary: str
+    path: StoryPath | None = None
+    points: list[StoryPoint]
+
+
 class Event(BaseModel):
     id: str
     title: str
@@ -103,6 +152,8 @@ class Event(BaseModel):
     # Nearest NASA HLS optical scene per radar date: [{date, layer} | None, ...] or None
     hls: list[dict | None] | None = None
     layers: dict[str, str]
+    # Hand-written story (story.json), with a radar reading computed at each point
+    story: Story | None = None
 
 
 class Probe(BaseModel):
