@@ -1,22 +1,34 @@
 # SAR Change Watch: NISAR change detection (backend)
 
-NASA Space Apps Challenge 2026, "Dancing with the SARs". This repository holds the processing
-pipeline and the API; the map is in [sars-frontend](https://github.com/yusof-shkn/sars-frontend).
+**See what a disaster changed on the ground, through smoke, cloud and darkness.** This repository
+is the processing pipeline and API: it finds NISAR L-band radar passes over a hazard, reads only
+the area of interest from NASA's servers, detects and classifies change between two dates, and
+serves the results to the map in [sars-frontend](https://github.com/BahirYasrebSeemab/sars-frontend).
 
-Before/after change detection on NISAR L-band GCOV, on a single full-screen map: swipe compare,
-change classes, numbered areas of concentrated change, click-to-probe pixel values, basemaps
-(gray / satellite / streets / NASA HLS and MODIS photos of both dates), and one glass sidebar on
-the left: a searchable event dropdown, then everything about the open event, with the numbered
-areas in their own searchable list (by number, or by darker / growth / double bounce). An "Areas"
-switch shows or hides the numbered outlines. Opening or closing the sidebar never moves the map.
+Built for the NASA Space Apps Challenge 2026, "Dancing with the SARs". I wrote almost all of the
+code (this pipeline and API, and the map). Team repositories:
+[yusof-shkn/sars-backend](https://github.com/yusof-shkn/sars-backend) and
+[yusof-shkn/sars-frontend](https://github.com/yusof-shkn/sars-frontend).
+
+![Before and after: the same ground on both radar dates, split by a draggable divider](docs/screenshots/11_before-and-after-view.jpg)
+
+**Highlights**
+- Reads remote HDF5 files in place over HTTPS, fetching only the chunks inside the bounding box
+  (~100 MB per date instead of 1–9 GB), with a local cache so re-runs are instant.
+- Finds candidate events from NASA EONET and matching before/after granules from the CMR search.
+- Classifies change (darker, double bounce, rougher / growth, wind on water) with an automatic
+  threshold, groups it into numbered areas of concentrated change, and measures each class in km².
+- FastAPI serves events, tiles and per-pixel readings; 55 pytest tests.
+
+**Stack:** Python · FastAPI · uv · pytest · NASA Earthdata (NISAR GCOV, EONET, CMR, HLS, MODIS).
 
 ## Run
 Clone both repositories side by side. Processed events (the Meghna flood, the Thunder Bay
 fire, Lake Sarez, the Rasuwa debris flow and the Langtang Lirung glacier collapse, among others)
 are included in `data/events/`, so no download or login is needed to run the app.
 
-    git clone https://github.com/yusof-shkn/sars-backend.git
-    git clone https://github.com/yusof-shkn/sars-frontend.git
+    git clone https://github.com/BahirYasrebSeemab/sars-backend.git
+    git clone https://github.com/BahirYasrebSeemab/sars-frontend.git
     cd sars-backend && uv sync && uv run uvicorn main:app --reload
     cd sars-frontend && bun install && bun run start        # VITE_API_URL defaults to http://localhost:8000
 
